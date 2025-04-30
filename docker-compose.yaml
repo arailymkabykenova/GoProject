@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  url-shortener-app:
+    build: .
+    container_name: go-url-shortener-service
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+    environment:
+      - GIN_MODE=release # Example if using Gin framework later

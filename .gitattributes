@@ -1,0 +1,2 @@
+; ignore swagger docs changes in merge request
+vendor -diff
