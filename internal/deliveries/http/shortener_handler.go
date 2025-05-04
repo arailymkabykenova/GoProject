@@ -10,7 +10,6 @@ import (
 
 	"template/internal/repositories"
 	"template/internal/services"
-	models "template/internal/usecases/shortner"
 )
 
 type UpdateRequest struct {
@@ -46,7 +45,7 @@ func (h *ShortenerHandler) handleShorten(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	var req models.ShortenRequest
+	var req ShortenRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		log.Printf("Handler error decoding shorten request: %v", err)
 		respondWithError(w, http.StatusBadRequest, "Invalid request body")
@@ -66,7 +65,7 @@ func (h *ShortenerHandler) handleShorten(w http.ResponseWriter, r *http.Request)
 	}
 
 	fullShortURL := fmt.Sprintf("%s/%s", strings.TrimSuffix(h.baseURL, "/"), shortCode)
-	resp := models.ShortenResponse{ShortURL: fullShortURL, OriginalURL: req.URL}
+	resp := ShortenResponse{ShortURL: fullShortURL, OriginalURL: req.URL}
 	respondWithJSON(w, http.StatusCreated, resp)
 	log.Printf("Handler successfully handled shorten request for %s -> %s", req.URL, fullShortURL)
 }
@@ -180,7 +179,7 @@ func (h *ShortenerHandler) handleRedirectOrRoot(w http.ResponseWriter, r *http.R
 
 func respondWithError(w http.ResponseWriter, code int, message string) {
 	log.Printf("Responding with error: %d - %s", code, message)
-	respondWithJSON(w, code, models.ErrorResponse{Error: message})
+	respondWithJSON(w, code, ErrorResponse{Error: message})
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
